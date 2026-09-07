@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAMO COMPLEX C WING - Society Maintenance Receipt Generator</title>
+    <meta name="description"
+        content="Generate digital A5 PDF maintenance receipts and send directly to residents via WhatsApp for NAMO COMPLEX C WING, Dhayari, Pune – 411041.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Custom Design Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- jsPDF UMD Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Header Branding Section -->
+        <header class="app-header">
+            <div class="brand-badge">
+                <i class="fa-solid fa-building-shield"></i> Official Receipt Portal
+            </div>
+            <h1 class="app-title">NAMO COMPLEX C WING</h1>
+            <p class="app-subtitle">
+                <i class="fa-solid fa-location-dot"></i> DHAYARI, PUNE – 411041
+            </p>
+        </header>
+
+        <!-- Main Form Glassmorphic Card -->
+        <main class="glass-card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-receipt"></i> Society Maintenance Receipt Generator
+                </h2>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">
+                    Compact A5 PDF & WhatsApp Ready
+                </span>
+            </div>
+
+            <form id="receiptForm" novalidate>
+                <div class="form-grid">
+
+                    <!-- Flat No. -->
+                    <div class="form-group">
+                        <label for="flatNo" class="form-label">
+                            Flat No. <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-door-closed input-icon"></i>
+                            <input type="text" id="flatNo" class="form-input" placeholder="e.g. C-101" required>
+                        </div>
+                        <span class="error-message"><i class="fa-solid fa-circle-exclamation"></i> Please enter Flat No
+                            (e.g. C-101)</span>
+                    </div>
+
+                    <!-- Resident Name -->
+                    <div class="form-group">
+                        <label for="residentName" class="form-label">
+                            Resident Name <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user-check input-icon"></i>
+                            <input type="text" id="residentName" class="form-input" placeholder="e.g. Rahul Sharma"
+                                required>
+                        </div>
+                        <span class="error-message"><i class="fa-solid fa-circle-exclamation"></i> Please enter Resident
+                            Name</span>
+                    </div>
+
+                    <!-- WhatsApp Mobile Number -->
+                    <div class="form-group">
+                        <label for="whatsappNo" class="form-label">
+                            WhatsApp Mobile <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-brands fa-whatsapp input-icon"></i>
+                            <span class="phone-prefix">+91</span>
+                            <input type="tel" id="whatsappNo" class="form-input phone-input" placeholder="9876543210"
+                                maxlength="10" required>
+                        </div>
+                        <span class="error-message"><i class="fa-solid fa-circle-exclamation"></i> Valid 10-digit
+                            WhatsApp number required</span>
+                    </div>
+
+                    <!-- Maintenance Month -->
+                    <div class="form-group">
+                        <label for="monthSelect" class="form-label">
+                            Maintenance Month <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-calendar-days input-icon"></i>
+                            <select id="monthSelect" class="form-select" required></select>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Year -->
+                    <div class="form-group">
+                        <label for="yearSelect" class="form-label">
+                            Maintenance Year <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-calendar-check input-icon"></i>
+                            <select id="yearSelect" class="form-select" required></select>
+                        </div>
+                    </div>
+
+                    <!-- Payment Mode -->
+                    <div class="form-group">
+                        <label for="paymentMode" class="form-label">Payment Mode</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-credit-card input-icon"></i>
+                            <select id="paymentMode" class="form-select">
+                                <option value="Online / UPI">Online / UPI (GPay/PhonePe/Paytm)</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Bank Transfer (NEFT/IMPS)">Bank Transfer (NEFT/IMPS)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Amount -->
+                    <div class="form-group full-width">
+                        <label for="amountInput" class="form-label">
+                            Maintenance Amount (₹ INR) <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-indian-rupee-sign input-icon"></i>
+                            <input type="text" inputmode="decimal" id="amountInput" class="form-input"
+                                placeholder="e.g. 700 or 2000" required>
+                        </div>
+
+                        <!-- Quick Presets -->
+                        <div class="preset-container">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); align-self: center;">Quick
+                                Presets:</span>
+                            <button type="button" class="preset-btn" data-amount="500">₹500</button>
+                            <button type="button" class="preset-btn" data-amount="700">₹700</button>
+                            <button type="button" class="preset-btn" data-amount="1000">₹1,000</button>
+                            <button type="button" class="preset-btn" data-amount="1500">₹1,500</button>
+                            <button type="button" class="preset-btn" data-amount="2000">₹2,000</button>
+                            <button type="button" class="preset-btn" data-amount="2500">₹2,500</button>
+                            <button type="button" class="preset-btn" data-amount="3000">₹3,000</button>
+                        </div>
+
+                        <!-- Amount in Words -->
+                        <div id="amountWordsBadge" class="amount-words-badge"></div>
+                        <span class="error-message"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid
+                            positive amount</span>
+                    </div>
+
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="action-bar">
+                    <button type="submit" id="btnSubmit" class="btn btn-emerald">
+                        <i class="fa-solid fa-file-pdf"></i> Generate & Share Receipt
+                    </button>
+                    <button type="button" id="btnPreview" class="btn btn-gold">
+                        <i class="fa-solid fa-eye"></i> Live Preview
+                    </button>
+                    <button type="button" id="btnReset" class="btn btn-ghost">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+                    </button>
+                </div>
+            </form>
+        </main>
+
+        <!-- Receipt History Section -->
+        <section class="glass-card history-section">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Recent Receipts History
+                </h3>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Saved Locally</span>
+            </div>
+
+            <div class="history-controls">
+                <div class="input-wrapper" style="flex:1;">
+                    <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                    <input type="text" id="historySearch" class="search-input"
+                        placeholder="Search by Flat No, Resident Name or Month...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Flat No</th>
+                            <th>Resident Name</th>
+                            <th>Period</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>NAMO COMPLEX C WING &bull; Dhayari, Pune – 411041</p>
+            <p style="margin-top: 4px; font-size: 0.78rem;">Digital Society Maintenance Management &bull; Developed for
+                Mobile & Desktop</p>
+        </footer>
+
+    </div>
+
+    <!-- Success Celebration Modal & Quick Action Drawer -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-circle-check" style="color: #34d399;"></i> Receipt Ready!
+                </div>
+                <button type="button" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Success Celebration Banner -->
+                <div class="success-banner">
+                    <div class="success-icon-wrap">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3>Receipt Generated Successfully!</h3>
+                    <p>
+                        Receipt for <strong id="modalFlatNo" style="color:var(--gold-primary);">C-101</strong> (<span
+                            id="modalResident">Rahul</span>) of <strong id="modalAmount" style="color:#34d399;">₹
+                            2,000</strong> has been compiled.
+                    </p>
+                </div>
+
+                <!-- 3 Quick Action Buttons -->
+                <div class="modal-actions-grid">
+                    <!-- 1. Share PDF File (Mobile Chrome Web Share API) -->
+                    <button type="button" id="btnSharePDF" class="btn btn-whatsapp">
+                        <i class="fa-solid fa-share-nodes"></i> Share PDF File to WhatsApp
+                    </button>
+
+                    <!-- 2. Direct WhatsApp Chat -->
+                    <button type="button" id="btnOpenWhatsApp" class="btn btn-emerald">
+                        <i class="fa-brands fa-whatsapp"></i> Open Direct WhatsApp Chat
+                    </button>
+
+                    <!-- 3. Download PDF -->
+                    <button type="button" id="btnDownloadPDF" class="btn btn-gold">
+                        <i class="fa-solid fa-download"></i> Download A5 PDF Receipt
+                    </button>
+                </div>
+
+                <!-- Guidance Info Box -->
+                <div class="info-box">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <div>
+                        <strong>Mobile User Tip:</strong> Clicking <em>"Share PDF File"</em> launches your phone's
+                        native share sheet. Pick WhatsApp to send the receipt PDF and message directly!
+                    </div>
+                </div>
+
+                <!-- Embedded Live Preview -->
+                <div class="preview-container">
+                    <iframe id="successPreviewFrame" class="preview-iframe" title="PDF Preview"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Standalone Live Preview Modal -->
+    <div id="previewModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 750px; height: 85vh;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-file-pdf" style="color: var(--gold-primary);"></i> A5 PDF Receipt Preview
+                </div>
+                <button type="button" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding:0;">
+                <iframe id="previewFrame" class="preview-iframe" title="PDF Preview"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="script.js"></script>
+</body>
+</html>
